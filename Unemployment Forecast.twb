@@ -1,0 +1,491 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20181.18.0706.1237                               -->
+<workbook original-version='18.1' source-build='2018.1.3 (20181.18.0706.1237)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <datasources>
+    <datasource hasconnection='false' inline='true' name='Parameters' version='18.1'>
+      <aliases enabled='yes' />
+      <column caption='AR (Time lag)' datatype='integer' name='[Parameter 1]' param-domain-type='range' role='measure' type='quantitative' value='12'>
+        <calculation class='tableau' formula='12' />
+        <range max='24' min='1' />
+      </column>
+      <column caption='MA (Moving Average)' datatype='integer' name='[Parameter 2]' param-domain-type='list' role='measure' type='quantitative' value='0'>
+        <calculation class='tableau' formula='0' />
+        <members>
+          <member value='0' />
+          <member value='1' />
+        </members>
+      </column>
+      <column caption='I Seasonal Diff' datatype='integer' name='[Parameter 3]' param-domain-type='list' role='measure' type='quantitative' value='0'>
+        <calculation class='tableau' formula='0' />
+        <members>
+          <member value='0' />
+          <member value='1' />
+          <member value='2' />
+        </members>
+      </column>
+      <column caption='Months Forecast' datatype='integer' name='[Parameter 4]' param-domain-type='range' role='measure' type='quantitative' value='48'>
+        <calculation class='tableau' formula='48' />
+        <range max='48' min='0' />
+      </column>
+    </datasource>
+    <datasource caption='kc_house_train_data' inline='true' name='federated.09gt80v15ikma31h1plce0qu2qxo' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='kc_house_train_data' name='textscan.1vuk5as0jgl66r152jaku1eruqa2'>
+            <connection class='textscan' directory='C:/Users/Rik/Desktop/UMN Drive/MSBA 6310 Programming/Trends' filename='kc_house_train_data.csv' password='' server='' />
+          </named-connection>
+          <named-connection caption='California Unemployment Rate' name='textscan.1gi4k2806fcmg817v9kzo1jh339s'>
+            <connection class='textscan' directory='C:/Users/Rik/Desktop/UMN Drive/MSBA 6310 Programming/Trends' filename='California Unemployment Rate.csv' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.1gi4k2806fcmg817v9kzo1jh339s' name='California Unemployment Rate.csv' table='[California Unemployment Rate#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='date' name='DATE' ordinal='0' />
+            <column datatype='real' name='CALOSA7URN' ordinal='1' />
+          </columns>
+        </relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[California Unemployment Rate.csv]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
+              <attribute datatype='string' name='collation'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='field-delimiter'>&quot;,&quot;</attribute>
+              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
+              <attribute datatype='string' name='locale'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>DATE</remote-name>
+            <remote-type>133</remote-type>
+            <local-name>[DATE]</local-name>
+            <parent-name>[California Unemployment Rate.csv]</parent-name>
+            <remote-alias>DATE</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>CALOSA7URN</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[CALOSA7URN]</local-name>
+            <parent-name>[California Unemployment Rate.csv]</parent-name>
+            <remote-alias>CALOSA7URN</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption='Unemployment' datatype='real' name='[CALOSA7URN]' role='measure' type='quantitative' />
+      <column caption='Forecast date' datatype='date' name='[Calculation_1135751559875145732]' role='dimension' type='ordinal'>
+        <calculation class='tableau' formula='DATE(DATETRUNC(&apos;month&apos;,DATEADD(&apos;month&apos;,&#13;&#10;[Parameters].[Parameter 4],[Date (Months)])))' />
+      </column>
+      <column caption='unem' datatype='real' name='[Calculation_1135751559875629061]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='LOOKUP(SUM([CALOSA7URN]),[Parameters].[Parameter 4])'>
+          <table-calc ordering-type='Rows' />
+        </calculation>
+      </column>
+      <column caption='Past vs Future' datatype='string' name='[Calculation_1135751559875829766]' role='measure' type='nominal'>
+        <calculation class='tableau' formula='if LAST() &lt; [Parameters].[Parameter 4]&#13;&#10;then &apos;Forecast&apos;&#13;&#10;ELSE &apos;Actual&apos;&#13;&#10;END'>
+          <table-calc ordering-type='Rows' />
+        </calculation>
+      </column>
+      <column caption='Time Series' datatype='real' name='[Calculation_1135751559876153351]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='SCRIPT_REAL(&#13;&#10;&apos;&#13;&#10;import pandas as pd&#13;&#10;import numpy as np&#13;&#10;import matplotlib.pylab as plt&#13;&#10;from matplotlib.pylab import rcParams&#13;&#10;dates = _arg1&#13;&#10;unemploy = _arg2&#13;&#10;order_arima = min(_arg3)&#13;&#10;seasonal_diff = min (_arg4)&#13;&#10;ma_param = min (_arg5)&#13;&#10;months_forecast = min(_arg6)&#13;&#10;&#13;&#10;ts = pd.DataFrame({&quot;dates&quot;: dates,&quot;Unemployment&quot;: unemploy})&#13;&#10;ts = ts.set_index([&quot;dates&quot;])&#13;&#10;ts_log = np.log(ts)&#13;&#10;ts_log.index = pd.to_datetime(ts_log.index)&#13;&#10;ts_log_diff = ts_log - ts_log.shift()&#13;&#10;ts_log_diff[&quot;Unemployment&quot;][0] = 0&#13;&#10;from statsmodels.tsa.arima_model import ARIMA&#13;&#10;model = ARIMA(ts_log_diff, order=(order_arima, seasonal_diff, ma_param))&#13;&#10;results_ARIMA = model.fit(disp=-1)&#13;&#10;predictions_value = results_ARIMA.forecast(months_forecast)[0]&#13;&#10;from dateutil.relativedelta import relativedelta&#13;&#10;add_month = relativedelta(months=1)&#13;&#10;predictions_dates = list()&#13;&#10;for i in range(months_forecast):&#13;&#10;predictions_dates.append ( results_ARIMA.fittedvalues.index[-1] + ((i+1)*add_month))&#13;&#10;forecast_log_diff = pd.Series(predictions_value, index=predictions_dates)&#13;&#10;predictions_ARIMA_diff = pd.Series(results_ARIMA.fittedvalues, copy=True)&#13;&#10;predictions_ARIMA_diff_cumsum = predictions_ARIMA_diff.cumsum()&#13;&#10;predictions_ARIMA_log = pd.Series(np.asscalar(ts_log.ix[0]), index=ts_log.index)&#13;&#10;predictions_ARIMA_log = predictions_ARIMA_log.add(predictions_ARIMA_diff_cumsum,fill_value=0)&#13;&#10;predictions_ARIMA = np.exp(predictions_ARIMA_log)&#13;&#10;forecast_log_diff_ARIMA = pd.Series(forecast_log_diff, copy=True)&#13;&#10;forecast_ARIMA_log_diff_cumsum = forecast_log_diff_ARIMA.cumsum()&#13;&#10;forecast_ARIMA_log = pd.Series(np.asscalar(ts_log.ix[-1]), index=forecast_log_diff_ARIMA.index)&#13;&#10;forecast_ARIMA_log = forecast_ARIMA_log.add(forecast_ARIMA_log_diff_cumsum,fill_value=0)&#13;&#10;forecast_ARIMA = np.exp(forecast_ARIMA_log)&#13;&#10;return list(predictions_ARIMA)&#13;&#10;&apos;,&#13;&#10;&#13;&#10;ATTR([Date (Months)]), ATTR([CALOSA7URN]), MIN([Parameters].[Parameter 1]), MIN([Parameters].[Parameter 3]), &#13;&#10;MIN([Parameters].[Parameter 2]), MIN([Parameters].[Parameter 4]))'>
+          <table-calc ordering-type='Rows' />
+        </calculation>
+      </column>
+      <column caption='Forecast' datatype='real' name='[Calculation_1135751559877017608]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='SCRIPT_REAL(&#13;&#10;&#13;&#10;&apos;&#13;&#10;import pandas as pd&#13;&#10;import numpy as np&#13;&#10;import matplotlib.pylab as plt&#13;&#10;from matplotlib.pylab import rcParams&#13;&#10;dates = _arg1&#13;&#10;unemploy = _arg2&#13;&#10;order_arima = min(_arg3)&#13;&#10;seasonal_diff = min (_arg4)&#13;&#10;ma_param = min (_arg5)&#13;&#10;months_forecast = min(_arg6)&#13;&#10;ts = pd.DataFrame({&quot;dates&quot;: dates,&quot;Unemployment&quot;: unemploy})&#13;&#10;ts = ts.set_index([&quot;dates&quot;])&#13;&#10;ts_log = np.log(ts)&#13;&#10;ts_log.index = pd.to_datetime(ts_log.index)&#13;&#10;ts_log_diff = ts_log - ts_log.shift()&#13;&#10;ts_log_diff[&quot;Unemployment&quot;][0] = 0&#13;&#10;&#13;&#10;from statsmodels.tsa.arima_model import ARIMA&#13;&#10;model = ARIMA(ts_log_diff, order=(order_arima, seasonal_diff, ma_param))&#13;&#10;results_ARIMA = model.fit(disp=-1)&#13;&#10;predictions_value = results_ARIMA.forecast(months_forecast)[0]&#13;&#10;&#13;&#10;from dateutil.relativedelta import relativedelta&#13;&#10;add_month = relativedelta(months=1)&#13;&#10;predictions_dates = list()&#13;&#10;for i in range(months_forecast):&#13;&#10;    predictions_dates.append ( results_ARIMA.fittedvalues.index[-1] + ((i+1)*add_month))&#13;&#10;&#13;&#10;forecast_log_diff = pd.Series(predictions_value, index=predictions_dates)&#13;&#10;predictions_ARIMA_diff = pd.Series(results_ARIMA.fittedvalues, copy=True)&#13;&#10;predictions_ARIMA_diff_cumsum = predictions_ARIMA_diff.cumsum()&#13;&#10;predictions_ARIMA_log = pd.Series(np.asscalar(ts_log.ix[0]), index=ts_log.index)&#13;&#10;predictions_ARIMA_log = predictions_ARIMA_log.add(predictions_ARIMA_diff_cumsum,fill_value=0)&#13;&#10;predictions_ARIMA = np.exp(predictions_ARIMA_log)&#13;&#10;forecast_log_diff_ARIMA = pd.Series(forecast_log_diff, copy=True)&#13;&#10;forecast_ARIMA_log_diff_cumsum = forecast_log_diff_ARIMA.cumsum()&#13;&#10;forecast_ARIMA_log = pd.Series(np.asscalar(ts_log.ix[-1]), index=forecast_log_diff_ARIMA.index)&#13;&#10;forecast_ARIMA_log = forecast_ARIMA_log.add(forecast_ARIMA_log_diff_cumsum,fill_value=0)&#13;&#10;forecast_ARIMA = np.exp(forecast_ARIMA_log)&#13;&#10;forecast_ARIMA_2 = predictions_ARIMA.append(forecast_ARIMA)&#13;&#10;forecast_ARIMA_2 = forecast_ARIMA_2[len(forecast_ARIMA):]&#13;&#10;return list(forecast_ARIMA_2)&#13;&#10;&apos;,&#13;&#10;&#13;&#10;ATTR([Date (Months)]), ATTR([CALOSA7URN]), min([Parameters].[Parameter 1]), MIN([Parameters].[Parameter 3]),&#13;&#10;MIN([Parameters].[Parameter 2]), MIN([Parameters].[Parameter 4]))'>
+          <table-calc ordering-type='Rows' />
+        </calculation>
+      </column>
+      <column caption='Date' datatype='date' name='[DATE]' role='dimension' type='ordinal' />
+      <column datatype='date' name='[Date (Months)]' role='dimension' type='quantitative' user:agg-type='Month-Trunc' user:base-field='DATE' user:ui-builder='date-bin-builder'>
+        <calculation class='tableau' formula='DATE(DATETRUNC(&apos;month&apos;, [DATE]))' />
+      </column>
+      <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
+        <calculation class='tableau' formula='1' />
+      </column>
+      <folder name='Python' role='measures'>
+        <folder-item name='[Calculation_1135751559876153351]' type='field' />
+        <folder-item name='[Calculation_1135751559877017608]' type='field' />
+      </folder>
+      <layout dim-ordering='alphabetic' dim-percentage='0.28592' measure-ordering='alphabetic' measure-percentage='0.431034' parameter-percentage='0.283046' show-structure='false' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
+      </semantic-values>
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='AR (Time lag)' datatype='integer' name='[Parameter 1]' param-domain-type='range' role='measure' type='quantitative' value='12'>
+          <calculation class='tableau' formula='12' />
+          <range max='24' min='1' />
+        </column>
+        <column caption='MA (Moving Average)' datatype='integer' name='[Parameter 2]' param-domain-type='list' role='measure' type='quantitative' value='0'>
+          <calculation class='tableau' formula='0' />
+        </column>
+        <column caption='I Seasonal Diff' datatype='integer' name='[Parameter 3]' param-domain-type='list' role='measure' type='quantitative' value='0'>
+          <calculation class='tableau' formula='0' />
+        </column>
+        <column caption='Months Forecast' datatype='integer' name='[Parameter 4]' param-domain-type='range' role='measure' type='quantitative' value='48'>
+          <calculation class='tableau' formula='48' />
+          <range max='48' min='0' />
+        </column>
+      </datasource-dependencies>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet 1'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>California Unemployment ARIMA Forecast</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='kc_house_train_data' name='federated.09gt80v15ikma31h1plce0qu2qxo' />
+            <datasource name='Parameters' />
+          </datasources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='AR (Time lag)' datatype='integer' name='[Parameter 1]' param-domain-type='range' role='measure' type='quantitative' value='12'>
+              <calculation class='tableau' formula='12' />
+              <range max='24' min='1' />
+            </column>
+            <column caption='MA (Moving Average)' datatype='integer' name='[Parameter 2]' param-domain-type='list' role='measure' type='quantitative' value='0'>
+              <calculation class='tableau' formula='0' />
+            </column>
+            <column caption='I Seasonal Diff' datatype='integer' name='[Parameter 3]' param-domain-type='list' role='measure' type='quantitative' value='0'>
+              <calculation class='tableau' formula='0' />
+            </column>
+            <column caption='Months Forecast' datatype='integer' name='[Parameter 4]' param-domain-type='range' role='measure' type='quantitative' value='48'>
+              <calculation class='tableau' formula='48' />
+              <range max='48' min='0' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.09gt80v15ikma31h1plce0qu2qxo'>
+            <column caption='Unemployment' datatype='real' name='[CALOSA7URN]' role='measure' type='quantitative' />
+            <column caption='Forecast date' datatype='date' name='[Calculation_1135751559875145732]' role='dimension' type='ordinal'>
+              <calculation class='tableau' formula='DATE(DATETRUNC(&apos;month&apos;,DATEADD(&apos;month&apos;,&#13;&#10;[Parameters].[Parameter 4],[Date (Months)])))' />
+            </column>
+            <column caption='unem' datatype='real' name='[Calculation_1135751559875629061]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='LOOKUP(SUM([CALOSA7URN]),[Parameters].[Parameter 4])'>
+                <table-calc ordering-type='Rows' />
+              </calculation>
+            </column>
+            <column caption='Forecast' datatype='real' name='[Calculation_1135751559877017608]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='SCRIPT_REAL(&#13;&#10;&#13;&#10;&apos;&#13;&#10;import pandas as pd&#13;&#10;import numpy as np&#13;&#10;import matplotlib.pylab as plt&#13;&#10;from matplotlib.pylab import rcParams&#13;&#10;dates = _arg1&#13;&#10;unemploy = _arg2&#13;&#10;order_arima = min(_arg3)&#13;&#10;seasonal_diff = min (_arg4)&#13;&#10;ma_param = min (_arg5)&#13;&#10;months_forecast = min(_arg6)&#13;&#10;ts = pd.DataFrame({&quot;dates&quot;: dates,&quot;Unemployment&quot;: unemploy})&#13;&#10;ts = ts.set_index([&quot;dates&quot;])&#13;&#10;ts_log = np.log(ts)&#13;&#10;ts_log.index = pd.to_datetime(ts_log.index)&#13;&#10;ts_log_diff = ts_log - ts_log.shift()&#13;&#10;ts_log_diff[&quot;Unemployment&quot;][0] = 0&#13;&#10;&#13;&#10;from statsmodels.tsa.arima_model import ARIMA&#13;&#10;model = ARIMA(ts_log_diff, order=(order_arima, seasonal_diff, ma_param))&#13;&#10;results_ARIMA = model.fit(disp=-1)&#13;&#10;predictions_value = results_ARIMA.forecast(months_forecast)[0]&#13;&#10;&#13;&#10;from dateutil.relativedelta import relativedelta&#13;&#10;add_month = relativedelta(months=1)&#13;&#10;predictions_dates = list()&#13;&#10;for i in range(months_forecast):&#13;&#10;    predictions_dates.append ( results_ARIMA.fittedvalues.index[-1] + ((i+1)*add_month))&#13;&#10;&#13;&#10;forecast_log_diff = pd.Series(predictions_value, index=predictions_dates)&#13;&#10;predictions_ARIMA_diff = pd.Series(results_ARIMA.fittedvalues, copy=True)&#13;&#10;predictions_ARIMA_diff_cumsum = predictions_ARIMA_diff.cumsum()&#13;&#10;predictions_ARIMA_log = pd.Series(np.asscalar(ts_log.ix[0]), index=ts_log.index)&#13;&#10;predictions_ARIMA_log = predictions_ARIMA_log.add(predictions_ARIMA_diff_cumsum,fill_value=0)&#13;&#10;predictions_ARIMA = np.exp(predictions_ARIMA_log)&#13;&#10;forecast_log_diff_ARIMA = pd.Series(forecast_log_diff, copy=True)&#13;&#10;forecast_ARIMA_log_diff_cumsum = forecast_log_diff_ARIMA.cumsum()&#13;&#10;forecast_ARIMA_log = pd.Series(np.asscalar(ts_log.ix[-1]), index=forecast_log_diff_ARIMA.index)&#13;&#10;forecast_ARIMA_log = forecast_ARIMA_log.add(forecast_ARIMA_log_diff_cumsum,fill_value=0)&#13;&#10;forecast_ARIMA = np.exp(forecast_ARIMA_log)&#13;&#10;forecast_ARIMA_2 = predictions_ARIMA.append(forecast_ARIMA)&#13;&#10;forecast_ARIMA_2 = forecast_ARIMA_2[len(forecast_ARIMA):]&#13;&#10;return list(forecast_ARIMA_2)&#13;&#10;&apos;,&#13;&#10;&#13;&#10;ATTR([Date (Months)]), ATTR([CALOSA7URN]), min([Parameters].[Parameter 1]), MIN([Parameters].[Parameter 3]),&#13;&#10;MIN([Parameters].[Parameter 2]), MIN([Parameters].[Parameter 4]))'>
+                <table-calc ordering-type='Rows' />
+              </calculation>
+            </column>
+            <column caption='Date' datatype='date' name='[DATE]' role='dimension' type='ordinal' />
+            <column datatype='date' name='[Date (Months)]' role='dimension' type='quantitative' user:agg-type='Month-Trunc' user:base-field='DATE' user:ui-builder='date-bin-builder'>
+              <calculation class='tableau' formula='DATE(DATETRUNC(&apos;month&apos;, [DATE]))' />
+            </column>
+            <column-instance column='[Calculation_1135751559875145732]' derivation='Month-Trunc' name='[tmn:Calculation_1135751559875145732:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Calculation_1135751559875629061]' derivation='User' name='[usr:Calculation_1135751559875629061:qk]' pivot='key' type='quantitative'>
+              <table-calc ordering-type='Rows' />
+            </column-instance>
+            <column-instance column='[Calculation_1135751559877017608]' derivation='User' name='[usr:Calculation_1135751559877017608:qk]' pivot='key' type='quantitative'>
+              <table-calc ordering-type='Rows' />
+            </column-instance>
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <encoding attr='space' class='0' field='[federated.09gt80v15ikma31h1plce0qu2qxo].[usr:Calculation_1135751559877017608:qk]' field-type='quantitative' fold='true' scope='rows' synchronized='true' type='space' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane id='4' selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.09gt80v15ikma31h1plce0qu2qxo].[:Measure Names]' />
+            </encodings>
+          </pane>
+          <pane id='5' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.09gt80v15ikma31h1plce0qu2qxo].[usr:Calculation_1135751559875629061:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <mark-sizing custom-mark-size-in-axis-units='1.0' mark-alignment='mark-alignment-left' mark-sizing-setting='marks-scaling-on' use-custom-mark-size='false' />
+            <encodings>
+              <color column='[federated.09gt80v15ikma31h1plce0qu2qxo].[:Measure Names]' />
+            </encodings>
+          </pane>
+          <pane id='6' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.09gt80v15ikma31h1plce0qu2qxo].[usr:Calculation_1135751559877017608:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.09gt80v15ikma31h1plce0qu2qxo].[:Measure Names]' />
+            </encodings>
+          </pane>
+        </panes>
+        <rows>([federated.09gt80v15ikma31h1plce0qu2qxo].[usr:Calculation_1135751559875629061:qk] + [federated.09gt80v15ikma31h1plce0qu2qxo].[usr:Calculation_1135751559877017608:qk])</rows>
+        <cols>[federated.09gt80v15ikma31h1plce0qu2qxo].[tmn:Calculation_1135751559875145732:qk]</cols>
+      </table>
+    </worksheet>
+  </worksheets>
+  <windows saved-dpi-scale-factor='1.25' source-height='37'>
+    <window class='worksheet' maximized='true' name='Sheet 1'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='slider' param='[Parameters].[Parameter 4]' type='parameter' />
+            <card pane-specification-id='5' param='[federated.09gt80v15ikma31h1plce0qu2qxo].[:Measure Names]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.09gt80v15ikma31h1plce0qu2qxo].[mn:DATE:ok]</field>
+            <field>[federated.09gt80v15ikma31h1plce0qu2qxo].[none:Date (Months):qk]</field>
+            <field>[federated.09gt80v15ikma31h1plce0qu2qxo].[yr:Calculation_1135751559875145732:ok]</field>
+            <field>[federated.09gt80v15ikma31h1plce0qu2qxo].[yr:DATE:ok]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+    </window>
+  </windows>
+  <thumbnails>
+    <thumbnail height='192' name='Sheet 1' width='192'>
+      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
+    </thumbnail>
+  </thumbnails>
+</workbook>
